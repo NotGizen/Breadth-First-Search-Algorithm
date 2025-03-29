@@ -5,6 +5,7 @@
 #pragma once
 #include "Node.h"
 #include <queue>
+#include <vector>
 #define GWIDTH 4
 #define GHEIGHT 4
 namespace Tmpl8
@@ -31,18 +32,21 @@ public:
 	void MouseWheel( float ) { /* implement if you want to handle the mouse wheel */ }
 	void KeyUp( int ) { /* implement if you want to handle keys */ }
 	void KeyDown( int ) { /* implement if you want to handle keys */ }
-	void Algorithm(int StartX = 0, int StartY = 0);
+	void SimpleBFS(int StartX, int StartY);
+	void PathfindingBFS(int StartX, int StartY, int endX, int endY);
 	void CheckNeighbours(Node* currentNode, std::queue<Node*>& Q);
 	void PrintGrid();
+	void PrintPathGrid();
+	void ReconstructPath(Node* end, Node* current);
 	void AlghoritmTiles();
 	//DummyData dummy;
-	int grid[GHEIGHT][GWIDTH] = 
+	/*int grid[GHEIGHT][GWIDTH] = 
 	{
 	{0, 1, 0, 0},
 	{0, 1, 0, 0},
 	{0, 0, 1, 0},
 	{0, 0, 0, 0}
-	};
+	};*/
 	Node nodesGrid[GHEIGHT][GWIDTH];
 	// data members
 	int2 mousePos;

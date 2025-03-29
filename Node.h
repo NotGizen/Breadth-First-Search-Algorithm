@@ -8,6 +8,8 @@ public:
 	//Node* parent = nullptr;
 	bool visited = false;
 	int x, y;
+	Node* parent = nullptr;
+	bool isPath = false;
 	
 };
 

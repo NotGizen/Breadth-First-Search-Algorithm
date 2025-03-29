@@ -15,6 +15,7 @@ int px = 0, py = 0;
 // -----------------------------------------------------------
 void Game::Init()
 {
+	//Loading node grids with the correct positions(just like elements)
 	std::cout << "Node GRID: X / Y" << endl;
 	for (int y = 0; y < GHEIGHT; y++)
 	{
@@ -38,17 +39,17 @@ void Game::Tick( float /* deltaTime */ )
 	
 	if (showAlgorithm)
 	{
-		Algorithm();
+		PathfindingBFS(0, 0, 3, 3);
 		showAlgorithm = false;
 	}
 	AlghoritmTiles();
 
 }
 
-void Tmpl8::Game::Algorithm(int StartX, int StartY)
+void Tmpl8::Game::SimpleBFS(int StartX, int StartY)
 {
 	//INIT
-	Node* start = &nodesGrid[StartX][StartY];
+	Node* start = &nodesGrid[StartY][StartX];
 	
 	start->visited = true;
 	std::queue<Node*> Q;
@@ -57,15 +58,52 @@ void Tmpl8::Game::Algorithm(int StartX, int StartY)
 	
 	while (!Q.empty())
 	{
-		//Check neighbours(clockwise order ,starting in top one)
+		//Current node now is the first from the queue
+		
 		Node* current = Q.front();
 		//remove current first node from queue
 		Q.pop();
 		//Print in command line results
 		PrintGrid();
-		//Checkes and updates neighbours
+		//Checkes and updates neighbours (clockwise order ,starting from the top one)
 		CheckNeighbours(current, Q);
 	}
+}
+
+void Tmpl8::Game::PathfindingBFS(int StartX, int StartY, int endX, int endY)
+{
+	//Reset
+	for (int y = 0; y < GHEIGHT; y++)
+	{
+		for (int x = 0; x < GWIDTH; x++)
+		{
+			nodesGrid[y][x].parent = nullptr;
+			nodesGrid[y][x].visited = false;
+			nodesGrid[y][x].isPath = false;
+		}
+	}
+	//INIT
+	Node* start = &nodesGrid[StartY][StartX];
+	Node* end = &nodesGrid[endY][endX];
+	start->visited = true;
+	std::queue<Node*> Q;
+	//Push first node to queue
+	Q.push(start);
+	Node* current = Q.front();
+	while (!(&current == &end))
+	{
+		//Current node now is the first from the queue
+		 if (Q.empty()) break;
+		 current = Q.front();
+		//remove current first node from queue
+		Q.pop();
+		//Print in command line results
+		//PrintGrid();
+		//Checkes and updates neighbours (clockwise order ,starting from the top one)
+		CheckNeighbours(current, Q);
+	}
+	ReconstructPath(end, current);
+	PrintPathGrid();
 }
 
 void Tmpl8::Game::CheckNeighbours(Node* current, std::queue<Node*>& Q)
@@ -102,6 +140,7 @@ void Tmpl8::Game::CheckNeighbours(Node* current, std::queue<Node*>& Q)
 		
 		if (!neighbour->visited)
 		{
+			neighbour->parent = current;
 			neighbour->visited = true;
 			Q.push(neighbour);
 		}
@@ -124,6 +163,48 @@ void Tmpl8::Game::PrintGrid()
 	std::cout << "----------------\n";
 }
 
+void Tmpl8::Game::PrintPathGrid()
+{
+	
+		for (int y = 0; y < GHEIGHT; y++)
+		{
+			for (int x = 0; x < GWIDTH; x++)
+			{
+			
+				if (nodesGrid[y][x].isPath)
+				{
+
+					std::cout << "X ";  // Mark visited nodes
+
+				}
+				else
+					std::cout << ". ";  // Unvisited nodes
+			
+			
+			}
+			std::cout << std::endl;
+		}
+		std::cout << "----------------\n";
+
+	
+}
+
+void Tmpl8::Game::ReconstructPath(Node* end, Node* current)
+{
+	//std::vector<Node*> parents;
+	current = end;
+	while (current != nullptr)
+	{
+		//parents.push_back(current);
+		current->isPath = true;
+		//if (!current->parent) break;
+		current = current->parent;
+		
+	}
+	//std::reverse(parents.begin(), parents.end());
+	
+}
+
 
 
 void Tmpl8::Game::AlghoritmTiles()
@@ -132,7 +213,7 @@ void Tmpl8::Game::AlghoritmTiles()
 	{
 		for (int x = 0; x < GWIDTH; x++)
 		{
-			if (nodesGrid[y][x].visited)
+			if (nodesGrid[y][x].isPath)
 			{
 				screen->Bar(x * 100, y * 100, x * 100 + (offset * 3), y * 100 + (offset * 3), 0x0000FF);
 			}
