@@ -10,6 +10,7 @@ public:
 	int x, y;
 	Node* parent = nullptr;
 	bool isPath = false;
+	bool isCollision = false;
 	
 };
 

@@ -6,8 +6,8 @@
 #include "Node.h"
 #include <queue>
 #include <vector>
-#define GWIDTH 4
-#define GHEIGHT 4
+#define GWIDTH 12
+#define GHEIGHT 7
 namespace Tmpl8
 {
 class DummyData
@@ -27,7 +27,10 @@ public:
 	void Shutdown() { /* implement if you want to do something on exit */ }
 	// input handling
 	void MouseUp( int ) { /* implement if you want to detect mouse button presses */ }
-	void MouseDown(int button) { if (button == 1) showAlgorithm = true;/* implement if you want to detect mouse button presses */ }
+	void MouseDown(int button) {
+		if (button == 1) showAlgorithm = true;
+		if (button == 0) setEnd = true;
+	}
 	void MouseMove( int x, int y ) { mousePos.x = x, mousePos.y = y; }
 	void MouseWheel( float ) { /* implement if you want to handle the mouse wheel */ }
 	void KeyUp( int ) { /* implement if you want to handle keys */ }
@@ -40,19 +43,22 @@ public:
 	void ReconstructPath(Node* end, Node* current);
 	void AlghoritmTiles();
 	//DummyData dummy;
-	/*int grid[GHEIGHT][GWIDTH] = 
+	int collision[GHEIGHT][GWIDTH] = 
 	{
-	{0, 1, 0, 0},
-	{0, 1, 0, 0},
-	{0, 0, 1, 0},
-	{0, 0, 0, 0}
-	};*/
+	{0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0},
+	{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
+	{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
+	{0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0},
+	{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0},
+	{0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0}
+	};
 	Node nodesGrid[GHEIGHT][GWIDTH];
 	// data members
 	int2 mousePos;
 	//Algorithm
 	bool showAlgorithm = false;
-	
+	bool setEnd = false;
 	
 };
 

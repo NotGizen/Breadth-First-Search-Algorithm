@@ -7,9 +7,12 @@
 #include <iostream>
 #include <thread>
 
-const int offset = 25;
+const int offset = 30;
 Surface ball("assets/ball.png");
-int px = 0, py = 0;
+int2 ballPos = int2(0, 4);
+
+int2 endPos = int2(0,0);
+
 // -----------------------------------------------------------
 // Initialize the application
 // -----------------------------------------------------------
@@ -36,14 +39,22 @@ void Game::Init()
 void Game::Tick( float /* deltaTime */ )
 {
 	screen->Clear(0);
-	
+	int2 gMousePos = int2(mousePos.x / 100, mousePos.y / 100);
+	if (setEnd)
+	{
+		ballPos.x = gMousePos.x;
+		ballPos.y = gMousePos.y;
+		setEnd = false;
+	}
+	int px = offset + 100 * ballPos.x, py = offset + 100 * ballPos.y;
 	if (showAlgorithm)
 	{
-		PathfindingBFS(0, 0, 3, 3);
 		showAlgorithm = false;
 	}
+		PathfindingBFS(ballPos.x, ballPos.y, gMousePos.x, gMousePos.y);
 	AlghoritmTiles();
-
+	ball.CopyTo(screen, px, py);     
+	cout <<"MousePos: "<< gMousePos.x << " / " << gMousePos.y <<endl;
 }
 
 void Tmpl8::Game::SimpleBFS(int StartX, int StartY)
@@ -80,6 +91,8 @@ void Tmpl8::Game::PathfindingBFS(int StartX, int StartY, int endX, int endY)
 			nodesGrid[y][x].parent = nullptr;
 			nodesGrid[y][x].visited = false;
 			nodesGrid[y][x].isPath = false;
+			nodesGrid[y][x].isCollision = false;
+			if (collision[y][x] == 1) nodesGrid[y][x].isCollision = true;
 		}
 	}
 	//INIT
@@ -138,7 +151,7 @@ void Tmpl8::Game::CheckNeighbours(Node* current, std::queue<Node*>& Q)
 			
 		}
 		
-		if (!neighbour->visited)
+		if (!neighbour->visited && !neighbour->isCollision)
 		{
 			neighbour->parent = current;
 			neighbour->visited = true;
@@ -213,14 +226,19 @@ void Tmpl8::Game::AlghoritmTiles()
 	{
 		for (int x = 0; x < GWIDTH; x++)
 		{
-			if (nodesGrid[y][x].isPath)
+			if (collision[y][x] == 1)
 			{
-				screen->Bar(x * 100, y * 100, x * 100 + (offset * 3), y * 100 + (offset * 3), 0x0000FF);
+				screen->Bar(x * 100 + offset, y * 100 + offset, x * 100 + (offset * 3), y * 100 + (offset * 3), 0x00FF00);
+			}
+			else if (nodesGrid[y][x].isPath)
+			{
+				screen->Bar(x * 100 + offset, y * 100 + offset, x * 100 + (offset * 3), y * 100 + (offset * 3), 0x0000FF);
 			}
 			else
 			{
-				screen->Bar(x * 100, y * 100, x * 100 + (offset * 3), y * 100 + (offset * 3), 0xFF0000);
+				screen->Bar(x * 100 + offset, y * 100 + offset, x * 100 + (offset * 3), y * 100 + (offset * 3), 0xFF0000);
 			}
+
 		}
 	}
 }
