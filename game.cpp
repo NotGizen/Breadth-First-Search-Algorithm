@@ -10,7 +10,7 @@
 const int offset = 30;
 Surface ball("assets/ball.png");
 int2 ballPos = int2(0, 4);
-
+float moveTimer = 0.f;
 int2 endPos = int2(0,0);
 
 // -----------------------------------------------------------
@@ -36,7 +36,7 @@ void Game::Init()
 // -----------------------------------------------------------
 // Main application tick function - Executed once per frame
 // -----------------------------------------------------------
-void Game::Tick( float /* deltaTime */ )
+void Game::Tick( float  deltaTime  )
 {
 	screen->Clear(0);
 	int2 gMousePos = int2(mousePos.x / 100, mousePos.y / 100);
@@ -53,6 +53,15 @@ void Game::Tick( float /* deltaTime */ )
 	}
 		PathfindingBFS(ballPos.x, ballPos.y, gMousePos.x, gMousePos.y);
 	AlghoritmTiles();
+	if (moveTimer >= 0.3f)
+	{
+		Move();
+		moveTimer = 0.f;
+	}
+	else
+	{
+		moveTimer += deltaTime/1000;
+	}
 	ball.CopyTo(screen, px, py);     
 	cout <<"MousePos: "<< gMousePos.x << " / " << gMousePos.y <<endl;
 }
@@ -238,6 +247,39 @@ void Tmpl8::Game::AlghoritmTiles()
 			{
 				screen->Bar(x * 100 + offset, y * 100 + offset, x * 100 + (offset * 3), y * 100 + (offset * 3), 0xFF0000);
 			}
+
+		}
+	}
+}
+
+void Tmpl8::Game::Move()
+{
+	Node* current = &nodesGrid[ballPos.y][ballPos.x];
+	Node* neighbour = nullptr;
+	for (int i = 0; i < 4; i++)
+	{
+		if (i == 0)
+		{
+			if (current->y - 1 < 0) continue;
+			if (nodesGrid[current->y - 1][current->x].isPath) ballPos.y -= 1;
+				
+		}
+		else if (i == 1)
+		{
+			if (current->x + 1 > GWIDTH - 1) continue;
+			if(nodesGrid[current->y][current->x + 1].isPath) ballPos.x += 1;
+
+		}
+		else if (i == 2)
+		{
+			if (current->y + 1 > GHEIGHT - 1) continue;
+			if(nodesGrid[current->y + 1][current->x].isPath) ballPos.y += 1;
+
+		}
+		else if (i == 3)
+		{
+			if (current->x - 1 < 0) continue;
+			if(nodesGrid[current->y][current->x - 1].isPath) ballPos.x -= 1;
 
 		}
 	}

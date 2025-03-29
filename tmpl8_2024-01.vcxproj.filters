@@ -24,6 +24,7 @@
       <Filter>template</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp" />
+    <ClCompile Include="Ball.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="game.h" />
@@ -55,6 +56,7 @@
       <Filter>template</Filter>
     </ClInclude>
     <ClInclude Include="Node.h" />
+    <ClInclude Include="Ball.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md">

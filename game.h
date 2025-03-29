@@ -4,6 +4,7 @@
 
 #pragma once
 #include "Node.h"
+
 #include <queue>
 #include <vector>
 #define GWIDTH 12
@@ -21,6 +22,7 @@ public:
 class Game : public TheApp
 {
 public:
+
 	// game flow methods
 	void Init();
 	void Tick( float deltaTime );
@@ -42,6 +44,8 @@ public:
 	void PrintPathGrid();
 	void ReconstructPath(Node* end, Node* current);
 	void AlghoritmTiles();
+	//Ball
+	void Move();
 	//DummyData dummy;
 	int collision[GHEIGHT][GWIDTH] = 
 	{
@@ -59,7 +63,7 @@ public:
 	//Algorithm
 	bool showAlgorithm = false;
 	bool setEnd = false;
-	
+
 };
 
 } // namespace Tmpl8

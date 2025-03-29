@@ -121,6 +121,7 @@
   </ItemDefinitionGroup>
   <!-- END Custom section -->
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="template\opencl.cpp" />
@@ -140,6 +141,7 @@
     <ClCompile Include="template\tmpl8math.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
     <ClInclude Include="cl\tools.cl" />
     <ClInclude Include="game.h" />
     <ClInclude Include="Node.h" />
